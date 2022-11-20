@@ -11,9 +11,9 @@ import java.util.Base64;
 import java.util.Map;
 
 @Component
-public class RestClient {
+public class    RestClient {
 
-    private final String server = "http://localhost:8181/";
+    private final String server = "http://localhost:8082/";
     private final RestTemplate rest;
     private final HttpHeaders headers;
 
@@ -30,12 +30,12 @@ public class RestClient {
 
     public <T> T[] getList(String uri, Class<T> _class) {
         HttpEntity<T[]> requestEntity = new HttpEntity<>(null, headers);
-//        ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.GET, requestEntity, String.class);
-//        this.setStatus(responseEntity.getStatusCode());
+        ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.GET, requestEntity, String.class);
+        this.setStatus(responseEntity.getStatusCode());
         TypeToken<?> listType = TypeToken.getArray(_class);
 
-        //return (T[]) new Gson().fromJson(responseEntity.getBody(),listType);
-        return (T[]) rest.getForObject(server + uri, listType.getRawType());
+        return (T[]) new Gson().fromJson(responseEntity.getBody(),listType);
+//        return (T[]) rest.getForObject(server + uri, listType.getRawType());
     }
 
     public <T> T get(String uri, Class<T> _class, Map<String, ?> query) {
